@@ -1,0 +1,32 @@
+<robot name="onshape">
+<link name="base_link"></link>
+<joint name="base_link_to_base" type="fixed">
+<parent link="base_link"/>
+<child link="chassi" />
+<origin rpy="0.0 0 0" xyz="0 0 0"/>
+</joint>
+<link name="chassi">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///chassi_visual.stl"/>
+</geometry>
+<material name="chassi_material">
+<color rgba="0.5 0.5 0.5 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package:///chassi_collision.stl"/>
+</geometry>
+</collision>
+<inertial>
+<origin xyz="0 0 0" rpy="0 0 0"/>
+<mass value="0" />
+<inertia ixx="0" ixy="0"  ixz="0" iyy="0" iyz="0" izz="0" />
+</inertial>
+</link>
+
+
+</robot>

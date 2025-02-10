@@ -7,7 +7,7 @@ import torch
 import trimesh
 
 from mani_skill import PACKAGE_ASSET_DIR
-from mani_skill.agents.robots import Fetch
+from mani_skill.agents.robots import Fetch, Boris
 from mani_skill.envs.sapien_env import BaseEnv
 from mani_skill.envs.utils import randomization
 from mani_skill.sensors.camera import CameraConfig
@@ -258,6 +258,22 @@ class OpenCabinetDrawerEnv(BaseEnv):
                         0.015,
                     ]
                 )
+                qpos = qpos.repeat(b).reshape(b, -1)
+                dist = randomization.uniform(1.6, 1.8, size=(b,))
+                theta = randomization.uniform(0.9 * torch.pi, 1.1 * torch.pi, size=(b,))
+                xy = torch.zeros((b, 2))
+                xy[:, 0] += torch.cos(theta) * dist
+                xy[:, 1] += torch.sin(theta) * dist
+                qpos[:, :2] = xy
+                noise_ori = randomization.uniform(
+                    -0.05 * torch.pi, 0.05 * torch.pi, size=(b,)
+                )
+                ori = (theta - torch.pi) + noise_ori
+                qpos[:, 2] = ori
+                self.agent.robot.set_qpos(qpos)
+                self.agent.robot.set_pose(sapien.Pose())
+            if self.robot_uids == "boris":
+                qpos = torch.tensor(Boris.keyframes['rest'].qpos)
                 qpos = qpos.repeat(b).reshape(b, -1)
                 dist = randomization.uniform(1.6, 1.8, size=(b,))
                 theta = randomization.uniform(0.9 * torch.pi, 1.1 * torch.pi, size=(b,))

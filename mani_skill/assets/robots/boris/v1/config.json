@@ -1,0 +1,10 @@
+{
+    "documentId": "39643a0ecb951b2804e1cf99",
+    "drawFrames": false,
+    "drawCollisions": false,
+    "useScads": true,
+    "mergeSTLs": "all",
+    "outputFormat": "urdf",
+    "assemblyName": "v1",
+    "addDummyBaseLink": true
+}

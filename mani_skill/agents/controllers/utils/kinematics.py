@@ -154,7 +154,11 @@ class Kinematics:
                 # TODO return mask for invalid solutions. CPU returns None at the moment
                 return result.solutions[:, 0, :]
             else:
+                #print(q0.shape)
+                #print(self.active_ancestor_joint_idxs)
+                #exit()
                 jacobian = self.pk_chain.jacobian(q0)
+                #jacobian = torch.tensor([self.pk_chain.jacobian(q0_i) for q0_i in q0])
                 # code commented out below is the fast kinematics method
                 # jacobian = (
                 #     self.fast_kinematics_model.jacobian_mixed_frame_pytorch(

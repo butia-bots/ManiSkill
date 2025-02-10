@@ -1,0 +1,8 @@
+{
+    "documentId": "0cdbb2f1f9ea10e7f40692b2",
+    "drawFrames": false,
+    "drawCollisions": false,
+    "useScads": true,
+    "mergeSTLs": "visual",
+    "outputFormat": "urdf"
+}
