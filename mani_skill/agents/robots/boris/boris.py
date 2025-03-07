@@ -32,16 +32,17 @@ class Boris(BaseAgent):
             gripper=dict(static_friction=2.0, dynamic_friction=2.0, restitution=0.0)
         ),
         link={
-            "boris_arm/left_finger_link": dict(
+            "left_finger_link": dict(
                 material="gripper", patch_radius=0.1, min_patch_radius=0.1
             ),
-            "boris_arm/right_finger_link": dict(
+            "right_finger_link": dict(
                 material="gripper", patch_radius=0.1, min_patch_radius=0.1
             ),
         },
     )
 
-    zeros = np.zeros(shape=(31,))
+    zeros = np.zeros(shape=(11,))
+    zeros[-4] = np.pi/2
     zeros[-2] = 0.03
     zeros[-1]= 0.03
 
@@ -56,7 +57,7 @@ class Boris(BaseAgent):
     def _sensor_configs(self):
         return [
             CameraConfig(
-                uid="boris_head",
+                uid="top",
                 pose=Pose.create_from_pq([0, 0, 0], [1, 0, 0, 0]),
                 width=256,
                 height=256,
@@ -66,14 +67,14 @@ class Boris(BaseAgent):
                 entity_uid="camera_link",
             ),
             CameraConfig(
-                uid="boris_hand",
+                uid="wrist",
                 pose=Pose.create_from_pq([-0.1, 0, 0.1], [1, 0, 0, 0]),
                 width=256,
                 height=256,
                 fov=2,
                 near=0.01,
                 far=100,
-                entity_uid="boris_arm/ee_gripper_link",
+                entity_uid="ee_gripper_link",
             ),
         ]
 
@@ -82,9 +83,10 @@ class Boris(BaseAgent):
             "waist",
             "shoulder",
             "elbow",
+            "forearm_roll",
             "wrist_angle",
             "wrist_rotate",
-            "wrist_yaw"
+            #"wrist_yaw"
         ]
         self.arm_stiffness = 1e3
         self.arm_damping = 1e2
@@ -98,7 +100,7 @@ class Boris(BaseAgent):
         self.gripper_damping = 1e2
         self.gripper_force_limit = 100
 
-        self.ee_link_name = "boris_arm/ee_gripper_link"
+        self.ee_link_name = "ee_gripper_link"
 
         self.base_joint_names = [
             "root_x_axis_joint",
@@ -136,6 +138,20 @@ class Boris(BaseAgent):
 
         # PD ee position
         arm_pd_ee_delta_pos = PDEEPosControllerConfig(
+            joint_names=self.base_joint_names + self.arm_joint_names,
+            pos_lower=-0.1,
+            pos_upper=0.1,
+            stiffness=self.arm_stiffness,
+            damping=self.arm_damping,
+            force_limit=self.arm_force_limit,
+            ee_link=self.ee_link_name,
+            urdf_path=self.urdf_path,
+            use_target=True,
+            #use_delta=True,
+            #normalize_action=False,
+            #frame="boris_arm/base_footprint"
+        )
+        arm_pd_ee_target_delta_pos = PDEEPosControllerConfig(
             joint_names=self.arm_joint_names,
             pos_lower=-0.1,
             pos_upper=0.1,
@@ -144,31 +160,52 @@ class Boris(BaseAgent):
             force_limit=self.arm_force_limit,
             ee_link=self.ee_link_name,
             urdf_path=self.urdf_path,
+            use_target=True,
+            #use_delta=True,
+            #normalize_action=False,
+            #frame="boris_arm/base_footprint"
         )
         #print(self.arm_joint_names)
         arm_pd_ee_delta_pose = PDEEPoseControllerConfig(
             joint_names=self.arm_joint_names,
-            pos_lower=-1.0,
-            pos_upper=1.0,
-            rot_lower=-6.18,
-            rot_upper=6.18,
+            pos_lower=-0.1,
+            pos_upper=0.1,
+            rot_lower=-0.1,
+            rot_upper=0.1,
             stiffness=self.arm_stiffness,
             damping=self.arm_damping,
             force_limit=self.arm_force_limit,
             ee_link=self.ee_link_name,
             urdf_path=self.urdf_path,
-            normalize_action=True,
-            #use_delta=True
+            #frame="boris_arm/base_footprint"
+            #normalize_action=True,
+            use_delta=True
+        )
+        arm_pd_ee_target_delta_pose = PDEEPoseControllerConfig(
+            joint_names=self.arm_joint_names,
+            pos_lower=-0.1,
+            pos_upper=0.1,
+            rot_lower=-0.1,
+            rot_upper=0.1,
+            stiffness=self.arm_stiffness,
+            damping=self.arm_damping,
+            force_limit=self.arm_force_limit,
+            ee_link=self.ee_link_name,
+            urdf_path=self.urdf_path,
+            #frame="boris_arm/base_footprint"
+            #normalize_action=True,
+            use_delta=True,
+            use_target=True
         )
 
-        arm_pd_ee_target_delta_pos = deepcopy(arm_pd_ee_delta_pos)
-        arm_pd_ee_target_delta_pos.use_target = True
-        arm_pd_ee_target_delta_pose = deepcopy(arm_pd_ee_delta_pose)
-        arm_pd_ee_target_delta_pose.use_target = True
+        #arm_pd_ee_target_delta_pos = deepcopy(arm_pd_ee_delta_pos)
+        #arm_pd_ee_target_delta_pos.use_target = True
+        #arm_pd_ee_target_delta_pose = deepcopy(arm_pd_ee_delta_pose)
+        #arm_pd_ee_target_delta_pose.use_target = True
 
         # PD ee position (for human-interaction/teleoperation)
         arm_pd_ee_delta_pose_align = deepcopy(arm_pd_ee_delta_pose)
-        arm_pd_ee_delta_pose_align.frame = "boris_arm/ee_gripper_link"
+        arm_pd_ee_delta_pose_align.frame = "ee_gripper_link"
 
         # PD joint velocity
         arm_pd_joint_vel = PDJointVelControllerConfig(
@@ -206,8 +243,8 @@ class Boris(BaseAgent):
         # However, tune a good force limit to have a good mimic behavior
         gripper_pd_joint_pos = PDJointPosMimicControllerConfig(
             self.gripper_joint_names,
-            -0.01,  # a trick to have force when the object is thin
-            0.037,
+            -0.1,  # a trick to have force when the object is thin
+            0.1,
             self.gripper_stiffness,
             self.gripper_damping,
             #self.gripper_force_limit,
@@ -225,6 +262,15 @@ class Boris(BaseAgent):
             force_limit=500,
         )
 
+        base_pd_joint_stiff = PDJointPosControllerConfig(
+            self.base_joint_names,
+            lower=0.0,
+            upper=0.0,
+            damping=1000,
+            force_limit=500,
+            stiffness=1e6
+        )
+
         controller_configs = dict(
             pd_joint_delta_pos=dict(
                 arm=arm_pd_joint_delta_pos,
@@ -240,7 +286,7 @@ class Boris(BaseAgent):
             pd_ee_delta_pos=dict(
                 arm=arm_pd_ee_delta_pos,
                 gripper=gripper_pd_joint_pos,
-                base=base_pd_joint_vel,
+                base=base_pd_joint_stiff,
             ),
             pd_ee_delta_pose=dict(
                 arm=arm_pd_ee_delta_pose,
@@ -296,10 +342,10 @@ class Boris(BaseAgent):
 
     def _after_init(self):
         self.finger1_link: Link = sapien_utils.get_obj_by_name(
-            self.robot.get_links(), "boris_arm/left_finger_link"
+            self.robot.get_links(), "left_finger_link"
         )
         self.finger2_link: Link = sapien_utils.get_obj_by_name(
-            self.robot.get_links(), "boris_arm/right_finger_link"
+            self.robot.get_links(), "right_finger_link"
         )
         self.tcp: Link = sapien_utils.get_obj_by_name(
             self.robot.get_links(), self.ee_link_name

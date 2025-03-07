@@ -69,6 +69,8 @@ class Kinematics:
             self.active_ancestor_joint_idxs.index(idx)
             for idx in self.active_joint_indices
         ]
+        #print(self.controlled_joints_idx_in_qmask)
+        #exit()
         if self.device.type == "cuda":
             self.use_gpu_ik = True
             self._setup_gpu()

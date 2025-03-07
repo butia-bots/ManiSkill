@@ -9,6 +9,7 @@ from mani_skill.agents.robots.fetch.fetch import Fetch
 from mani_skill.agents.robots.panda.panda import Panda
 from mani_skill.agents.robots.panda.panda_wristcam import PandaWristCam
 from mani_skill.agents.robots.xmate3.xmate3 import Xmate3Robotiq
+from mani_skill.agents.robots.boris.boris import Boris
 from mani_skill.envs.sapien_env import BaseEnv
 from mani_skill.envs.utils.randomization.pose import random_quaternions
 from mani_skill.sensors.camera import CameraConfig
@@ -143,6 +144,10 @@ class PickSingleYCBEnv(BaseEnv):
         )
         self._hidden_objects.append(self.goal_site)
 
+    @property
+    def ycb_object_name(self):
+        return [o.name for o in self._objs]
+
     def _after_reconfigure(self, options: dict):
         self.object_zs = []
         for obj in self._objs:
@@ -158,12 +163,20 @@ class PickSingleYCBEnv(BaseEnv):
             xyz = torch.zeros((b, 3))
             xyz[:, :2] = torch.rand((b, 2)) * 0.2 - 0.1
             xyz[:, 2] = self.object_zs[env_idx]
+            if self.robot_uids == "boris":
+                xyz[:,0] -= 0.6
+            if self.robot_uids == "widowx250s":
+                xyz[:,0] -= 0.3
             qs = random_quaternions(b, lock_x=True, lock_y=True)
             self.obj.set_pose(Pose.create_from_pq(p=xyz, q=qs))
 
             goal_xyz = torch.zeros((b, 3))
             goal_xyz[:, :2] = torch.rand((b, 2)) * 0.2 - 0.1
             goal_xyz[:, 2] = torch.rand((b)) * 0.3 + xyz[:, 2]
+            if self.robot_uids == "boris":
+                goal_xyz[:, 0] -= 0.6
+            if self.robot_uids == "widowx250s":
+                goal_xyz[:, 0] -= 0.3
             self.goal_site.set_pose(Pose.create_from_pq(goal_xyz))
 
             # Initialize robot arm to a higher position above the table than the default typically used for other table top tasks
@@ -185,6 +198,15 @@ class PickSingleYCBEnv(BaseEnv):
                 )
                 self.agent.reset(qpos)
                 self.agent.robot.set_root_pose(sapien.Pose([-0.562, 0, 0]))
+            elif self.robot_uids == "boris":
+                qpos = Boris.keyframes['rest'].qpos
+                self.agent.reset(qpos)
+                self.agent.robot.set_root_pose(sapien.Pose([-1.2, 0, -0.8]))
+            elif self.robot_uids == "widowx250s":
+                qpos = np.zeros(shape=(8,))
+                qpos[4] = np.pi/2
+                self.agent.reset(qpos)
+                self.agent.robot.set_root_pose(sapien.Pose([-0.615, 0, 0]))
             else:
                 raise NotImplementedError(self.robot_uids)
 

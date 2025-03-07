@@ -33,20 +33,20 @@
     <child link="root_arm_1_link_1"/>
     <axis xyz="1 0 0"/>
     <limit effort="100" lower="-20" upper="20" velocity="0.50"/>
-    <dynamics damping="10.0" friction="10"/>
+    <dynamics damping="100.0" friction="100"/>
   </joint>
   <joint name="root_y_axis_joint" type="prismatic">
     <parent link="root_arm_1_link_1"/>
     <child link="root_arm_1_link_2"/>
     <axis xyz="0 1 0"/>
     <limit effort="100" lower="-20" upper="20" velocity="0.50"/>
-    <dynamics damping="10.0" friction="10"/>
+    <dynamics damping="100.0" friction="100"/>
   </joint>
   <joint name="root_z_rotation_joint" type="continuous">
     <parent link="root_arm_1_link_2"/>
     <child link="root_arm_1_link_3"/>
     <axis xyz="0 0 1"/>
-    <dynamics damping="10.0" friction="1"/>
+    <dynamics damping="100.0" friction="100"/>
   </joint>
   <joint name="root_base_footprint_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 -0.0"/>
@@ -242,105 +242,105 @@
       <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
     </inertial>
   </link>
-  <joint name="horizontal_neck_joint" type="revolute">
+  <joint name="horizontal_neck_joint" type="fixed">
     <origin rpy="0 0 1.5708" xyz="0 0 0"/>
     <parent link="head_root"/>
     <child link="neck_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.86" upper="0.86" velocity="10"/>
   </joint>
-  <joint name="jaw_joint" type="revolute">
+  <joint name="jaw_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.00668 -0.10888 0.05845"/>
     <parent link="head_link"/>
     <child link="jaw_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="0" upper="0.5" velocity="10"/>
   </joint>
-  <joint name="left_eye_horizontal_joint" type="revolute">
+  <joint name="left_eye_horizontal_joint" type="fixed">
     <origin rpy="1.5708 0 0" xyz="0.09352 -0.08739 -0.05892"/>
     <parent link="head_link"/>
     <child link="left_eye_horizontal_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.27453" upper="0.7854" velocity="10"/>
   </joint>
-  <joint name="left_eye_vertical_joint" type="revolute">
+  <joint name="left_eye_vertical_joint" type="fixed">
     <origin rpy="1.5708 0 0" xyz="0 0 0"/>
     <parent link="left_eye_horizontal_link"/>
     <child link="left_eye_vertical_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.17453" upper="0.7854" velocity="10"/>
   </joint>
-  <joint name="left_inferior_eyelid_joint" type="revolute">
+  <joint name="left_inferior_eyelid_joint" type="fixed">
     <origin rpy="-3.14159 -0.06113 0" xyz="0.09208 -0.08718 -0.0824"/>
     <parent link="head_link"/>
     <child link="left_inferior_eyelid_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.17453" upper="0.7854" velocity="10"/>
   </joint>
-  <joint name="left_rotacional_eyebrow_joint" type="revolute">
+  <joint name="left_rotacional_eyebrow_joint" type="fixed">
     <origin rpy="2e-05 1.57091 6e-05" xyz="0 0 0"/>
     <parent link="left_vertical_eyebrow_link"/>
     <child link="left_rotacional_eyebrow_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.17453" upper="0.4" velocity="10"/>
   </joint>
-  <joint name="left_superior_eyelid_joint" type="revolute">
+  <joint name="left_superior_eyelid_joint" type="fixed">
     <origin rpy="0 0.06113 0" xyz="0.09123 -0.0871 -0.04284"/>
     <parent link="head_link"/>
     <child link="left_superior_eyelid_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.17453" upper="0.4" velocity="10"/>
   </joint>
-  <joint name="left_vertical_eyebrow_joint" type="prismatic">
+  <joint name="left_vertical_eyebrow_joint" type="fixed">
     <origin rpy="1.5708 0 -0.00012" xyz="0.1119 -0.12427 -0.0587"/>
     <parent link="head_link"/>
     <child link="left_vertical_eyebrow_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="0" upper="0.02" velocity="10"/>
   </joint>
-  <joint name="right_rotacional_eyebrow_joint" type="revolute">
+  <joint name="right_rotacional_eyebrow_joint" type="fixed">
     <origin rpy="0 1.5708 0" xyz="0 0 0"/>
     <parent link="right_vertical_eyebrow_link"/>
     <child link="right_rotacional_eyebrow_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.4" upper="0.17453" velocity="10"/>
   </joint>
-  <joint name="right_vertical_eyebrow_joint" type="prismatic">
+  <joint name="right_vertical_eyebrow_joint" type="fixed">
     <origin rpy="1.5708 0 0" xyz="0.1119 -0.12289 0.01565"/>
     <parent link="head_link"/>
     <child link="right_vertical_eyebrow_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="0" upper="0.02" velocity="10"/>
   </joint>
-  <joint name="right_eye_horizontal_joint" type="revolute">
+  <joint name="right_eye_horizontal_joint" type="fixed">
     <origin rpy="1.5708 0 0" xyz="0.09352 -0.08739 0.01605"/>
     <parent link="head_link"/>
     <child link="right_eye_horizontal_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.27453" upper="0.4" velocity="10"/>
   </joint>
-  <joint name="right_eye_vertical_joint" type="revolute">
+  <joint name="right_eye_vertical_joint" type="fixed">
     <origin rpy="1.5708 0 0" xyz="0 0 0"/>
     <parent link="right_eye_horizontal_link"/>
     <child link="right_eye_vertical_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.2" upper="0.7854" velocity="10"/>
   </joint>
-  <joint name="right_inferior_eyelid_joint" type="revolute">
+  <joint name="right_inferior_eyelid_joint" type="fixed">
     <origin rpy="-3.14159 0 0" xyz="0.09188 -0.08649 -0.00398"/>
     <parent link="head_link"/>
     <child link="right_inferior_eyelid_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.17" upper="0.7854" velocity="10"/>
   </joint>
-  <joint name="right_superior_eyelid_joint" type="revolute">
+  <joint name="right_superior_eyelid_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.09073 -0.08626 0.03037"/>
     <parent link="head_link"/>
     <child link="right_superior_eyelid_link"/>
     <axis xyz="0 0 1.0"/>
     <limit effort="1.0" lower="-0.4" upper="0.17" velocity="10"/>
   </joint>
-  <joint name="vertical_neck_joint" type="revolute">
+  <joint name="vertical_neck_joint" type="fixed">
     <origin rpy="-1.5708 0 -1.5708" xyz="0.02367 -0.00121 0.01929"/>
     <parent link="neck_link"/>
     <child link="head_link"/>
@@ -651,7 +651,7 @@
       <inertia ixx="0.027083333333333338" ixy="0" ixz="0" iyy="0.027083333333333338" iyz="0" izz="0.05"/>
     </inertial>
   </link>
-  <joint name="left_wheel_joint" type="continuous">
+  <joint name="left_wheel_joint" type="fixed">
     <axis rpy="0 0 0" xyz="0 1 0"/>
     <parent link="base_link"/>
     <child link="left_wheel"/>
@@ -676,7 +676,7 @@
       <inertia ixx="0.027083333333333338" ixy="0" ixz="0" iyy="0.027083333333333338" iyz="0" izz="0.05"/>
     </inertial>
   </link>
-  <joint name="right_wheel_joint" type="continuous">
+  <joint name="right_wheel_joint" type="fixed">
     <axis rpy="0 0 0" xyz="0 1 0"/>
     <parent link="base_link"/>
     <child link="right_wheel"/>
@@ -781,7 +781,7 @@
     <axis xyz="0 0 1"/>
     <limit effort="1" lower="-1.57" upper="1.57" velocity="1"/>
   </joint>
-  <joint name="head_pan_joint" type="revolute">
+  <joint name="head_pan_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.07700000000000001 0 0.8"/>
     <parent link="dorso_link"/>
     <child link="head_pan_link"/>
@@ -824,7 +824,7 @@
     <axis xyz="0 1 0"/>
     <limit effort="1" lower="-1.57" upper="1.57" velocity="1"/>
   </joint>
-  <joint name="head_tilt_joint" type="revolute">
+  <joint name="head_tilt_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0.05"/>
     <parent link="head_pan_link"/>
     <child link="head_tilt_link"/>
@@ -1137,34 +1137,31 @@
   </joint>
   <link name="boris_arm/base_link">
     <visual>
-      <origin rpy="1.5707963267948966 0 1.5707963267948966" xyz="-0.095773 0 -0.10565023"/>
+      <origin rpy="0 0 1.5707963267948966" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_1_base.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-1-Base.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
-      <origin rpy="1.5707963267948966 0 1.5707963267948966" xyz="-0.095773 0 -0.10565023"/>
+      <origin rpy="0 0 1.5707963267948966" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_1_base.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-1-Base.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="1.5707963267948966 0 1.5707963267948966" xyz="-0.0001350000 -0.0000266286 0.0338755000"/>
-      <mass value="0.379673"/>
-      <inertia ixx="0.0004351000" ixy="0.0000000707" ixz="0.0000000266" iyy="0.0004452000" iyz="-0.0000022881" izz="0.0005731000"/>
+      <origin rpy="0 0 1.5707963267948966" xyz="-0.0380446000 0.0006138920 0.0193354000"/>
+      <mass value="0.538736"/>
+      <inertia ixx="0.0021150000" ixy="-0.0000163500" ixz="0.0000006998" iyy="0.0006921000" iyz="0.0000464200" izz="0.0025240000"/>
     </inertial>
   </link>
   <joint name="waist" type="revolute">
     <axis xyz="0 0 1"/>
-    <dynamics damping="1.0"/>
-    <limit effort="33.82" lower="-1.6056" upper="1.6056" velocity="1.256"/>
-    <origin rpy="0 0 0" xyz="0 0 0.066175"/>
+    <limit effort="10" lower="-3.141592653589793" upper="3.141592653589793" velocity="3.141592653589793"/>
+    <origin rpy="0 0 0" xyz="0 0 0.072"/>
     <parent link="boris_arm/base_link"/>
-    <child link="boris_arm/shoulder_link"/>
-    
+    <child link="shoulder_link"/>
   </joint>
-  <transmission name="trans_waist">
+  <!-- <transmission name="trans_waist">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="waist">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -1172,37 +1169,34 @@
     <actuator name="waist_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
-  <link name="boris_arm/shoulder_link">
+  </transmission> -->
+  <link name="shoulder_link">
     <visual>
       <origin rpy="0 0 1.5707963267948966" xyz="0 0 -0.003"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_2_shoulder.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-2-Shoulder.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
       <origin rpy="0 0 1.5707963267948966" xyz="0 0 -0.003"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_2_shoulder.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-2-Shoulder.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="0 0 1.5707963267948966" xyz="0.0000223210 0.0000414608 0.0066287000"/>
+      <origin rpy="0 0 1.5707963267948966" xyz="0.0000223482 0.0000414609 0.0066287000"/>
       <mass value="0.480879"/>
-      <inertia ixx="0.0003790000" ixy="0.0000000022" ixz="-0.0000003561" iyy="0.0005557000" iyz="0.0000012247" izz="0.0005889000"/>
+      <inertia ixx="0.0003790000" ixy="0.0000000022" ixz="-0.0000003561" iyy="0.0005557000" iyz="0.0000012245" izz="0.0005889000"/>
     </inertial>
   </link>
   <joint name="shoulder" type="revolute">
     <axis xyz="0 1 0"/>
-    <dynamics damping="1.0"/>
-    <limit effort="131.76" lower="-1.221" upper="1.518" velocity="1.454"/>
+    <limit effort="20" lower="-1.8849555921538759" upper="1.9896753472735358" velocity="3.141592653589793"/>
     <origin rpy="0 0 0" xyz="0 0 0.03865"/>
-    <parent link="boris_arm/shoulder_link"/>
-    <child link="boris_arm/upper_arm_link"/>
-    
+    <parent link="shoulder_link"/>
+    <child link="upper_arm_link"/>
   </joint>
-  <transmission name="trans_shoulder">
+  <!-- <transmission name="trans_shoulder">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="shoulder">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -1210,37 +1204,34 @@
     <actuator name="shoulder_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
-  <link name="boris_arm/upper_arm_link">
+  </transmission> -->
+  <link name="upper_arm_link">
     <visual>
       <origin rpy="0 0 1.5707963267948966" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_3_upper_arm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-3-UA.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
       <origin rpy="0 0 1.5707963267948966" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_3_upper_arm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-3-UA.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="0 0 1.5707963267948966" xyz="0.0119707000 -0.0001179264 0.1394290000"/>
-      <mass value="0.297781"/>
-      <inertia ixx="0.0017100000" ixy="-0.0000011433" ixz="0.0000021161" iyy="0.0016310000" iyz="0.0002135000" izz="0.0001482000"/>
+      <origin rpy="0 0 1.5707963267948966" xyz="0.0171605000 0.0000002725 0.1913230000"/>
+      <mass value="0.430811"/>
+      <inertia ixx="0.0034630000" ixy="-0.0000000001" ixz="-0.0000000002" iyy="0.0035870000" iyz="0.0004272000" izz="0.0004566000"/>
     </inertial>
   </link>
   <joint name="elbow" type="revolute">
     <axis xyz="0 1 0"/>
-    <dynamics damping="5.0"/>
-    <limit effort="76.94" velocity="1.571" lower="-2.251" upper="2.251"/>
-    <origin rpy="0 0 0" xyz="0.05 0 0.2"/>
-    <parent link="boris_arm/upper_arm_link"/>
-    <child link="boris_arm/forearm_link"/>
-    
+    <limit effort="15" lower="-2.1467549799530254" upper="1.6057029118347832" velocity="3.141592653589793"/>
+    <origin rpy="0 0 0" xyz="0.04975 0 0.25"/>
+    <parent link="upper_arm_link"/>
+    <child link="upper_forearm_link"/>
   </joint>
-  <transmission name="trans_elbow">
+  <!-- <transmission name="trans_elbow">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="elbow">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -1248,37 +1239,69 @@
     <actuator name="elbow_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
-  <link name="boris_arm/forearm_link">
+  </transmission> -->
+  <link name="upper_forearm_link">
     <visual>
-      <origin rpy="0 0 1.5707963267948966" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_4_forearm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-4-UF.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
-      <origin rpy="0 0 1.5707963267948966" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_4_forearm.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-4-UF.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="0 0 1.5707963267948966" xyz="0.1211920000 -0.0001238123 0.0000000000"/>
-      <mass value="0.283651"/>
-      <inertia ixx="0.0011850000" ixy="-0.0000024317" ixz="0.0000000000" iyy="0.0000682900" iyz="0.0000000000" izz="0.0012060000"/>
+      <origin rpy="0 0 0" xyz="0.1079630000 0.0001158760 0"/>
+      <mass value="0.234589"/>
+      <inertia ixx="0.0000397100" ixy="0.0000023528" ixz="0" iyy="0.0008878000" iyz="0" izz="0.0008880000"/>
+    </inertial>
+  </link>
+  <joint name="forearm_roll" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort="2" lower="-3.141582653589793" upper="3.141582653589793" velocity="3.141592653589793"/>
+    <origin rpy="0 0 0" xyz="0.175 0 0"/>
+    <parent link="upper_forearm_link"/>
+    <child link="lower_forearm_link"/>
+  </joint>
+  <!-- <transmission name="trans_forearm_roll">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="forearm_roll">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="forearm_roll_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission> -->
+  <link name="lower_forearm_link">
+    <visual>
+      <origin rpy="3.141592653589793 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes_wx250s/WXSA-250-M-5-LF.obj" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="3.141592653589793 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes_wx250s/WXSA-250-M-5-LF.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="3.141592653589793 0 0" xyz="0.0374395000 0.0052225200 0"/>
+      <mass value="0.220991"/>
+      <inertia ixx="0.0000636900" ixy="-0.0000229200" ixz="0" iyy="0.0001677000" iyz="0" izz="0.0001834000"/>
     </inertial>
   </link>
   <joint name="wrist_angle" type="revolute">
     <axis xyz="0 1 0"/>
-    <dynamics damping="1.0"/>
-    <limit effort="66.18" lower="-2.251" upper="2.251" velocity="1.521"/>
-    <origin rpy="0 1.57 0" xyz="0.2 0 0"/>
-    <parent link="boris_arm/forearm_link"/>
-    <child link="boris_arm/wrist_link"/>
-    
+    <limit effort="5" lower="-1.7453292519943295" upper="2.1467549799530254" velocity="3.141592653589793"/>
+    <origin rpy="0 0 0" xyz="0.075 0 0"/>
+    <parent link="lower_forearm_link"/>
+    <child link="wrist_link"/>
   </joint>
-  <transmission name="trans_wrist_angle">
+  <!-- <transmission name="trans_wrist_angle">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="wrist_angle">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -1286,19 +1309,18 @@
     <actuator name="wrist_angle_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
-  <link name="boris_arm/wrist_link">
+  </transmission> -->
+  <link name="wrist_link">
     <visual>
       <origin rpy="0 0 1.5707963267948966" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_5_wrist.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-6-Wrist.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
       <origin rpy="0 0 1.5707963267948966" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_5_wrist.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-6-Wrist.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
@@ -1309,14 +1331,12 @@
   </link>
   <joint name="wrist_rotate" type="revolute">
     <axis xyz="1 0 0"/>
-    <dynamics damping="5.0"/>
-    <limit effort="29.35" velocity="1.571" lower="-2.251" upper="2.251"/>
+    <limit effort="1" lower="-3.141582653589793" upper="3.141582653589793" velocity="3.141592653589793"/>
     <origin rpy="0 0 0" xyz="0.065 0 0"/>
-    <parent link="boris_arm/wrist_link"/>
-    <child link="boris_arm/gripper_link"/>
-    
+    <parent link="wrist_link"/>
+    <child link="gripper_link"/>
   </joint>
-  <transmission name="trans_wrist_rotate">
+  <!-- <transmission name="trans_wrist_rotate">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="wrist_rotate">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -1324,19 +1344,18 @@
     <actuator name="wrist_rotate_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
-  <link name="boris_arm/gripper_link">
+  </transmission> -->
+  <link name="gripper_link">
     <visual>
       <origin rpy="0 0 1.5707963267948966" xyz="-0.02 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_6_gripper.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-7-Gripper.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
       <origin rpy="0 0 1.5707963267948966" xyz="-0.02 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_6_gripper.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-7-Gripper.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
@@ -1348,72 +1367,60 @@
   <joint name="ee_arm" type="fixed">
     <axis xyz="1 0 0"/>
     <origin rpy="0 0 0" xyz="0.043 0 0"/>
-    <parent link="boris_arm/gripper_link"/>
-    <child link="boris_arm/ee_arm_link"/>
+    <parent link="gripper_link"/>
+    <child link="ee_arm_link"/>
   </joint>
-  <link name="boris_arm/ee_arm_link">
+  <link name="ee_arm_link">
     <inertial>
       <mass value="0.001"/>
       <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
     </inertial>
   </link>
-  <joint name="gripper" type="continuous">
+  <joint name="gripper" type="fixed">
     <axis xyz="1 0 0"/>
-    <limit effort="1" velocity="3.141592653589793"/>
+    <!-- <limit effort="1" velocity="3.141592653589793"/> -->
     <origin rpy="0 0 0" xyz="0.0055 0 0"/>
-    <parent link="boris_arm/ee_arm_link"/>
-    <child link="boris_arm/gripper_prop_link"/>
-    
+    <parent link="ee_arm_link"/>
+    <child link="gripper_prop_link"/>
   </joint>
-  <transmission name="trans_gripper">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="gripper">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="gripper_motor">
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <link name="boris_arm/gripper_prop_link">
+  <link name="gripper_prop_link">
     <visual>
       <origin rpy="0 0 1.5707963267948966" xyz="-0.0685 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_7_gripper_prop.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-8-Gripper-Prop.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
-    <collision>
+    <!-- stao: No need to model this collision, it is inside gripper_link -->
+    <!-- <collision>
       <origin rpy="0 0 1.5707963267948966" xyz="-0.0685 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_7_gripper_prop.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-8-Gripper-Prop.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-    </collision>
+    </collision> -->
     <inertial>
       <origin rpy="0 0 1.5707963267948966" xyz="0.0008460000 -0.0000016817 0.0000420000"/>
       <mass value="0.00434"/>
       <inertia ixx="0.0000005923" ixy="0.0000000000" ixz="0.0000003195" iyy="0.0000011156" iyz="-0.0000000004" izz="0.0000005743"/>
     </inertial>
   </link>
-  <!-- If the AR tag is being used, then add the AR tag mount -->
-  <!-- If the gripper bar is being used, then also add the gripper bar -->
+  <!-- If the default gripper bar is being used, then also add the gripper bar -->
   <joint name="gripper_bar" type="fixed">
     <axis xyz="1 0 0"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="boris_arm/ee_arm_link"/>
-    <child link="boris_arm/gripper_bar_link"/>
+    <parent link="ee_arm_link"/>
+    <child link="gripper_bar_link"/>
   </joint>
-  <link name="boris_arm/gripper_bar_link">
+  <link name="gripper_bar_link">
     <visual>
       <origin rpy="0 0 1.5707963267948966" xyz="-0.063 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_8_gripper_bar.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-9-Gripper-Bar.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
       <origin rpy="0 0 1.5707963267948966" xyz="-0.063 0 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_8_gripper_bar.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-9-Gripper-Bar.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
@@ -1425,26 +1432,24 @@
   <joint name="ee_bar" type="fixed">
     <axis xyz="1 0 0"/>
     <origin rpy="0 0 0" xyz="0.023 0 0"/>
-    <parent link="boris_arm/gripper_bar_link"/>
-    <child link="boris_arm/fingers_link"/>
+    <parent link="gripper_bar_link"/>
+    <child link="fingers_link"/>
   </joint>
-  <link name="boris_arm/fingers_link">
+  <link name="fingers_link">
     <inertial>
       <mass value="0.001"/>
       <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
     </inertial>
   </link>
-  <!-- If the gripper fingers are being used, add those as well -->
+  <!-- If the default gripper fingers are being used, add those as well -->
   <joint name="left_finger" type="prismatic">
-    <axis xyz="0 -1 0"/>
-    <limit effort="60" lower="0.0" upper="0.037" velocity="0.05"/>
-    <origin rpy="0 0 0" xyz="0.03 0.037 0"/>
-    <parent link="boris_arm/fingers_link"/>
-    <child link="boris_arm/left_finger_link"/>
-    <dynamics damping="100.0"/>
-    
+    <axis xyz="0 1 0"/>
+    <limit effort="5" lower="0.015" upper="0.037" velocity="1"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="fingers_link"/>
+    <child link="left_finger_link"/>
   </joint>
-  <transmission name="trans_left_finger">
+  <!-- <transmission name="trans_left_finger">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="left_finger">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -1452,37 +1457,35 @@
     <actuator name="left_finger_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
-  <link name="boris_arm/left_finger_link">
+  </transmission> -->
+  <link name="left_finger_link">
     <visual>
       <origin rpy="3.141592653589793 3.141592653589793 0" xyz="0 0.005 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_9_gripper_finger.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-10-Finger.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
       <origin rpy="3.141592653589793 3.141592653589793 0" xyz="0 0.005 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_9_gripper_finger.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-10-Finger.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
       <origin rpy="3.141592653589793 3.141592653589793 1.5707963267948966" xyz="0.0138160000 0.0000000000 0.0000000000"/>
       <mass value="0.016246"/>
-      <inertia ixx="0.0000047310" ixy="0.0000004560" ixz="0.0000000000" iyy="0.0000015506" iyz="0.0000000000" izz="0.0000037467"/>
+      <inertia ixx="0.0000047310" ixy="-0.0000004560" ixz="0.0000000000" iyy="0.0000015506" iyz="0.0000000000" izz="0.0000037467"/>
     </inertial>
   </link>
   <joint name="right_finger" type="prismatic">
-    <axis xyz="0 1 0"/>
-    <limit effort="60" lower="0.00" upper="0.037" velocity="0.05"/>
-    <origin rpy="0 0 0" xyz="0.03 -0.037 0"/>
-    <parent link="boris_arm/fingers_link"/>
-    <child link="boris_arm/right_finger_link"/>
-    <mimic joint="left_finger"/>
-    <dynamics damping="100.0"/>
+    <axis xyz="0 -1 0"/>
+    <limit effort="5" lower="0.015" upper="0.037" velocity="1"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="fingers_link"/>
+    <child link="right_finger_link"/>
+    <!-- <mimic joint="left_finger" multiplier="1" offset="0"/> -->
   </joint>
-  <transmission name="trans_right_finger">
+  <!-- <transmission name="trans_right_finger">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="right_finger">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -1490,19 +1493,18 @@
     <actuator name="right_finger_motor">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-  </transmission>
-  <link name="boris_arm/right_finger_link">
+  </transmission> -->
+  <link name="right_finger_link">
     <visual>
       <origin rpy="0 3.141592653589793 0" xyz="0 -0.005 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_9_gripper_finger.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-10-Finger.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="interbotix_black"/>
     </visual>
     <collision>
       <origin rpy="0 3.141592653589793 0" xyz="0 -0.005 0"/>
       <geometry>
-        <mesh filename="interbotix_xsarm_descriptions/meshes/mobile_wx200_meshes/mobile_wx200_9_gripper_finger.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="meshes_wx250s/WXSA-250-M-10-Finger.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
@@ -1511,28 +1513,13 @@
       <inertia ixx="0.0000047310" ixy="0.0000004560" ixz="0.0000000000" iyy="0.0000015506" iyz="0.0000000000" izz="0.0000037467"/>
     </inertial>
   </link>
-  <joint name="wrist_yaw" type="continuous">
-    <axis xyz="1 1 1"/>
-    <dynamics damping="1.0"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="boris_arm/fingers_link"/>
-    <child link="boris_arm/fingers_yaw_link"/>
-    <limit effort="1" velocity="3.141592653589793" lower="-3.14" upper="3.14"/>
-  </joint>
-  <link name="boris_arm/fingers_yaw_link">
-    <inertial>
-      <mass value="0.001"/>
-      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
-    </inertial>
-  </link>
   <joint name="ee_gripper" type="fixed">
     <axis xyz="1 0 0"/>
     <origin rpy="0 0 0" xyz="0.027575 0 0"/>
-    <parent link="boris_arm/fingers_yaw_link"/>
-    <child link="boris_arm/ee_gripper_link"/>
-    <limit effort="1" velocity="3.141592653589793" lower="-3.14" upper="3.14"/>
+    <parent link="fingers_link"/>
+    <child link="ee_gripper_link"/>
   </joint>
-  <link name="boris_arm/ee_gripper_link">
+  <link name="ee_gripper_link">
     <inertial>
       <mass value="0.001"/>
       <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
