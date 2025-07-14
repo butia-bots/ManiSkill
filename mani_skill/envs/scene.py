@@ -9,6 +9,8 @@ import sapien.render
 import torch
 from sapien.render import RenderCameraComponent
 
+import mani_skill.render.utils as render_utils
+from mani_skill.envs.utils.system.backend import BackendInfo
 from mani_skill.render import SAPIEN_RENDER_SYSTEM
 from mani_skill.sensors.base_sensor import BaseSensor
 from mani_skill.sensors.camera import Camera
@@ -51,6 +53,7 @@ class ManiSkillScene:
         debug_mode: bool = True,
         device: Device = None,
         parallel_in_single_scene: bool = False,
+        backend: BackendInfo = None,
     ):
         if sub_scenes is None:
             sub_scenes = [sapien.Scene()]
@@ -69,6 +72,7 @@ class ManiSkillScene:
         self._gpu_sim_initialized = False
         self.debug_mode = debug_mode
         self.device = device
+        self.backend = backend  # references the backend object stored in BaseEnv class
 
         self.render_system_group: sapien.render.RenderSystemGroup = None
         self.camera_groups: Dict[str, sapien.render.RenderCameraGroup] = dict()
@@ -83,6 +87,8 @@ class ManiSkillScene:
 
         self.sensors: Dict[str, BaseSensor] = dict()
         self.human_render_cameras: Dict[str, Camera] = dict()
+        self._sensors_initialized = False
+        self._human_render_cameras_initialized = False
 
         self._reset_mask = torch.ones(len(sub_scenes), dtype=bool, device=self.device)
         """Used internally by various objects like Actor, Link, and Controllers to auto mask out sub-scenes so they do not get modified during
@@ -109,6 +115,10 @@ class ManiSkillScene:
             actors=dict(), articulations=dict()
         )
         """state dict registry that map actor/articulation names to Actor/Articulation struct references. Only these structs are used for the environment state"""
+
+    def can_render(self):
+        """Whether or not this Scene object permits rendering, depending on the rendering device selected"""
+        return render_utils.can_render(self.backend.render_device)
 
     # -------------------------------------------------------------------------- #
     # Functions from sapien.Scene
@@ -369,19 +379,46 @@ class ManiSkillScene:
     def step(self):
         self.px.step()
 
-    def update_render(self):
-        if SAPIEN_RENDER_SYSTEM == "3.1":
-            self._sapien_31_update_render()
-        else:
-            self._sapien_update_render()
+    def update_render(
+        self, update_sensors: bool = True, update_human_render_cameras: bool = True
+    ):
+        """
+        Updates the renderer based on the current simulation state. Note that on the first call if a sensor/human render camera is required to be updated,
+        GPU memory will be allocated for the sensor/human render camera respectively.
 
-    def _sapien_update_render(self):
+        Arguments:
+            update_sensors (bool): Whether to update the sensors.
+            update_human_render_cameras (bool): Whether to update the human render cameras.
+        """
+        if SAPIEN_RENDER_SYSTEM == "3.1":
+            self._sapien_31_update_render(
+                update_sensors=update_sensors,
+                update_human_render_cameras=update_human_render_cameras,
+            )
+        else:
+            self._sapien_update_render(
+                update_sensors=update_sensors,
+                update_human_render_cameras=update_human_render_cameras,
+            )
+
+    def _sapien_update_render(
+        self, update_sensors: bool = True, update_human_render_cameras: bool = True
+    ):
+        # note that this design is such that no GPU memory is allocated for memory unless requested for, which can occur
+        # after the e.g. physx GPU simulation is initialized.
         if self.gpu_sim_enabled:
             if not self.parallel_in_single_scene:
                 if self.render_system_group is None:
                     self._setup_gpu_rendering()
+                if not self._sensors_initialized and update_sensors:
                     self._gpu_setup_sensors(self.sensors)
+                    self._sensors_initialized = True
+                if (
+                    not self._human_render_cameras_initialized
+                    and update_human_render_cameras
+                ):
                     self._gpu_setup_sensors(self.human_render_cameras)
+                    self._human_render_cameras_initialized = True
                 self.render_system_group.update_render()
             else:
                 self.px.sync_poses_gpu_to_cpu()
@@ -389,15 +426,24 @@ class ManiSkillScene:
         else:
             self.sub_scenes[0].update_render()
 
-    def _sapien_31_update_render(self):
+    def _sapien_31_update_render(
+        self, update_sensors: bool = True, update_human_render_cameras: bool = True
+    ):
         if self.gpu_sim_enabled:
             if self.render_system_group is None:
                 # TODO (stao): for new render system support the parallel in single scene rendering option
                 for scene in self.sub_scenes:
                     scene.update_render()
                 self._setup_gpu_rendering()
+            if not self._sensors_initialized and update_sensors:
                 self._gpu_setup_sensors(self.sensors)
+                self._sensors_initialized = True
+            if (
+                not self._human_render_cameras_initialized
+                and update_human_render_cameras
+            ):
                 self._gpu_setup_sensors(self.human_render_cameras)
+                self._human_render_cameras_initialized = True
 
             manager: sapien.render.GpuSyncManager = self.render_system_group
             manager.sync()
@@ -887,11 +933,15 @@ class ManiSkillScene:
             self.px.cuda_articulation_qvel.torch()[:, :] = torch.zeros_like(
                 self.px.cuda_articulation_qvel.torch()
             )  # zero out all q velocities
+            self.px.cuda_articulation_qf.torch()[:, :] = torch.zeros_like(
+                self.px.cuda_articulation_qf.torch()
+            )  # zero out all qf
 
             self.px.gpu_apply_rigid_dynamic_data()
             self.px.gpu_apply_articulation_root_pose()
             self.px.gpu_apply_articulation_root_velocity()
             self.px.gpu_apply_articulation_qvel()
+            self.px.gpu_apply_articulation_qf()
 
             self._gpu_sim_initialized = True
             self.px.gpu_update_articulation_kinematics()
@@ -1044,7 +1094,13 @@ class ManiSkillScene:
                     )
                 except RuntimeError as e:
                     raise RuntimeError(
-                        "Unable to create GPU parallelized camera group. If the error is about being unable to create a buffer, you are likely using too many Cameras. Either use less cameras (via less parallel envs) and/or reduce the size of the cameras"
+                        "Unable to create GPU parallelized camera group. "
+                        "If the error is about being unable to create a buffer, you are likely using too many Cameras. "
+                        "Either use less cameras (via less parallel envs) and/or reduce the size of the cameras. "
+                        "Another common cause is using a memory intensive shader, you can try using the 'minimal' shader "
+                        "which optimizes for GPU memory but disables some advanced functionalities. "
+                        "Another option is to avoid rendering with the rgb_array mode / using the human render cameras as "
+                        "they can be more memory intensive as they typically have higher resolutions for the purposes of visualization."
                     ) from e
                 sensor.camera.camera_group = camera_group
                 self.camera_groups[name] = camera_group

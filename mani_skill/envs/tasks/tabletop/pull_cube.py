@@ -43,7 +43,7 @@ class PullCubeEnv(BaseEnv):
 
     @property
     def _default_sensor_configs(self):
-        pose = look_at(eye=[0.3, 0, 0.6], target=[-0.1, 0, 0.1])
+        pose = look_at(eye=[-0.5,0.0,0.25], target=[0.2,0.0,-0.5])
         return [CameraConfig("base_camera", pose, 128, 128, np.pi / 2, 0.01, 100)]
 
     @property
@@ -119,7 +119,7 @@ class PullCubeEnv(BaseEnv):
             tcp_pose=self.agent.tcp.pose.raw_pose,
             goal_pos=self.goal_region.pose.p,
         )
-        if self._obs_mode in ["state", "state_dict"]:
+        if self.obs_mode_struct.use_state:
             obs.update(
                 obj_pose=self.obj.pose.raw_pose,
             )

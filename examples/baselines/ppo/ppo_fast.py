@@ -52,7 +52,7 @@ class Args:
     """whether to capture videos of the agent performances (check out `videos` folder)"""
     save_trajectory: bool = False
     """whether to save trajectory data into the `videos` folder"""
-    save_model: bool = False
+    save_model: bool = True
     """whether to save model into the `runs/{run_name}` folder"""
     evaluate: bool = False
     """if toggled, only runs evaluation with the given model checkpoint and saves the evaluation trajectories"""
@@ -305,6 +305,7 @@ update = tensordict.nn.TensorDictModule(
 
 if __name__ == "__main__":
     args = tyro.cli(Args)
+    # if not args.evaluate: exit()
 
     batch_size = int(args.num_envs * args.num_steps)
     args.minibatch_size = batch_size // args.num_minibatches
@@ -325,7 +326,7 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
     ####### Environment setup #######
-    env_kwargs = dict(obs_mode="state", render_mode="rgb_array", sim_backend="gpu", robot_uids="boris")
+    env_kwargs = dict(obs_mode="state", render_mode="rgb_array", sim_backend="physx_cuda")
     if args.control_mode is not None:
         env_kwargs["control_mode"] = args.control_mode
     envs = gym.make(args.env_id, num_envs=args.num_envs if not args.evaluate else 1, reconfiguration_freq=args.reconfiguration_freq, **env_kwargs)

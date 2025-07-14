@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Dict, Union
 
 import numpy as np
 import sapien
@@ -42,6 +42,7 @@ class PlugChargerEnv(BaseEnv):
 
     SUPPORTED_ROBOTS = ["panda_wristcam"]
     agent: Union[PandaWristCam]
+    SUPPORTED_REWARD_MODES = ["none", "sparse"]
 
     def __init__(
         self, *args, robot_uids="panda_wristcam", robot_init_qpos_noise=0.02, **kwargs
@@ -183,28 +184,32 @@ class PlugChargerEnv(BaseEnv):
             self.scene_builder.initialize(env_idx)
 
             # Initialize agent
-            qpos = torch.tensor(
-                [
-                    0.0,
-                    np.pi / 8,
-                    0,
-                    -np.pi * 5 / 8,
-                    0,
-                    np.pi * 3 / 4,
-                    np.pi / 4,
-                    0.04,
-                    0.04,
-                ]
-            )
-            qpos = (
-                torch.normal(
-                    0, self.robot_init_qpos_noise, (b, len(qpos)), device=self.device
+            if self.agent.uid == "panda_wristcam":
+                qpos = torch.tensor(
+                    [
+                        0.0,
+                        np.pi / 8,
+                        0,
+                        -np.pi * 5 / 8,
+                        0,
+                        np.pi * 3 / 4,
+                        np.pi / 4,
+                        0.04,
+                        0.04,
+                    ]
                 )
-                + qpos
-            )
-            qpos[:, -2:] = 0.04
-            self.agent.robot.set_qpos(qpos)
-            self.agent.robot.set_pose(sapien.Pose([-0.615, 0, 0]))
+                qpos = (
+                    torch.normal(
+                        0,
+                        self.robot_init_qpos_noise,
+                        (b, len(qpos)),
+                        device=self.device,
+                    )
+                    + qpos
+                )
+                qpos[:, -2:] = 0.04
+                self.agent.robot.set_qpos(qpos)
+                self.agent.robot.set_pose(sapien.Pose([-0.615, 0, 0]))
 
             # Initialize charger
             xy = randomization.uniform(
@@ -268,19 +273,10 @@ class PlugChargerEnv(BaseEnv):
 
     def _get_obs_extra(self, info: Dict):
         obs = dict(tcp_pose=self.agent.tcp.pose.raw_pose)
-        if self._obs_mode in ["state", "state_dict"]:
+        if self.obs_mode_struct.use_state:
             obs.update(
                 charger_pose=self.charger.pose.raw_pose,
                 receptacle_pose=self.receptacle.pose.raw_pose,
                 goal_pose=self.goal_pose.raw_pose,
             )
         return obs
-
-    def compute_dense_reward(self, obs: Any, action: torch.Tensor, info: Dict):
-        return torch.zeros(self.num_envs, device=self.device)
-
-    def compute_normalized_dense_reward(
-        self, obs: Any, action: torch.Tensor, info: Dict
-    ):
-        max_reward = 1.0
-        return self.compute_dense_reward(obs=obs, action=action, info=info) / max_reward

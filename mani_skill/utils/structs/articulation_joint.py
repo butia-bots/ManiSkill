@@ -103,6 +103,20 @@ class ArticulationJoint(BaseStruct[physx.PhysxArticulationJoint]):
         else:
             return torch.tensor([self._physx_articulations[0].qpos[self.active_index]])
 
+    @qpos.setter
+    def qpos(self, arg1: torch.Tensor):
+        if self.scene.gpu_sim_enabled:
+            arg1 = common.to_tensor(arg1, device=self.device)
+            self.px.cuda_articulation_qpos.torch()[
+                self._data_index[self.scene._reset_mask[self._scene_idxs]],
+                self.active_index,
+            ] = arg1
+        else:
+            arg1 = common.to_numpy(arg1)
+            new_qpos = self.articulation._objs[0].qpos
+            new_qpos[self.active_index] = arg1
+            self.articulation._objs[0].qpos = new_qpos
+
     @property
     def qvel(self):
         """
@@ -237,15 +251,16 @@ class ArticulationJoint(BaseStruct[physx.PhysxArticulationJoint]):
     def drive_target(self, arg1: Array) -> None:
         arg1 = common.to_tensor(arg1, device=self.device)
         if self.scene.gpu_sim_enabled:
-            raise NotImplementedError(
-                "Setting drive targets of individual joints is not implemented yet."
-            )
+            self.articulation.px.cuda_articulation_target_qpos[
+                self._data_index[self.scene._reset_mask[self._scene_idxs]],
+                self.active_index,
+            ] = arg1
         else:
             if arg1.shape == ():
                 arg1 = arg1.reshape(
                     1,
                 )
-            self._objs[0].drive_target = arg1
+            self._objs[0].drive_target = arg1.numpy()
 
     @property
     def drive_velocity_target(self) -> torch.Tensor:
